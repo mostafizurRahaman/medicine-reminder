@@ -2,9 +2,8 @@ const {
    deleteReminderByEmailService,
 } = require("../services/reminder.services");
 const {
-   FindUserById,
    createUserService,
-   FindUserByEmail,
+
    FindUserByIdService,
    FindUserByEmailService,
    deleteUserByIdService,
@@ -12,11 +11,13 @@ const {
 
 exports.signUp = async (req, res, next) => {
    try {
+      console.log(req.body);
       const user = await createUserService(req.body);
+      const { password, ...others } = user.toObject();
       res.status(200).send({
          status: "success",
          message: "User created user successfully",
-         data: user,
+         data: others,
       });
    } catch (err) {
       next(err);
@@ -96,7 +97,7 @@ exports.getLogIn = async (req, res, next) => {
          status: "success",
          message: "You are loggedIn Successfully",
          data: {
-            others,
+            ...others,
             accessToken,
          },
       });
@@ -115,6 +116,12 @@ exports.getMe = async (req, res, next) => {
             message: "UnAuthorized User",
          });
       }
+      const { password, ...others } = user.toObject();
+      res.status(200).send({
+         status: "success",
+         message: "Your are logged In",
+         data: others,
+      });
    } catch (err) {
       next(err);
    }

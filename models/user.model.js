@@ -36,23 +36,18 @@ const userSchema = mongoose.Schema(
       role: {
          type: String,
          enum: {
-            values: ["admin", "patient", "careTaker"],
+            values: ["admin", "patient"],
             message: "{VALUE} shouldn't be role",
          },
+         required: [true, "please provide valid role"],
       },
-      reminders: [
-         {
-            type: ObjectId,
-            ref: "Reminder",
-            required: true,
-         },
-      ],
       status: {
          type: String,
          enum: {
             values: ["active", "in-active"],
             message: `{VALUE} shouldn't be status`,
          },
+         default: "active",
       },
    },
    {
@@ -62,13 +57,14 @@ const userSchema = mongoose.Schema(
 
 userSchema.pre("save", function (next) {
    this.password = bcrypt.hashSync(this.password, 10);
+   next();
 });
 
 userSchema.methods.comparePassword = (password, hash) => {
    return bcrypt.compareSync(password, hash);
 };
 
-userSchema.methods.createJWT = () => {
+userSchema.methods.createJWT = function () {
    const payload = { email: this.email, role: this.role };
    const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
       expiresIn: "7d",
@@ -76,4 +72,5 @@ userSchema.methods.createJWT = () => {
    return accessToken;
 };
 
+const User = mongoose.model("User", userSchema);
 module.exports = User;

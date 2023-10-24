@@ -1,9 +1,11 @@
 const jwt = require("jsonwebtoken");
+// const { promisify } = require("util");
 const { promisify } = require("util");
 
 exports.verifyJWT = async (req, res, next) => {
    try {
-      const token = req.headers.authorization.split(" ")[0];
+      const token = req.headers.authorization.split(" ")[1];
+      console.log(token);
       if (!token) {
          return res.status(400).send({
             status: "failed",
@@ -19,6 +21,6 @@ exports.verifyJWT = async (req, res, next) => {
       console.log(decoded);
       next();
    } catch (err) {
-      throw new Error("UnAuthorized User");
+      next(err);
    }
 };
