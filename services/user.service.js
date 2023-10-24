@@ -16,9 +16,8 @@ exports.FindUserByIdService = async (id) => {
    return user;
 };
 
-exports.deleteUserByIdService= async (id) => {
+exports.deleteUserByIdService = async (id) => {
    const result = await User.deleteOne({ _id: id });
+   console.log(result);
    return result;
 };
-
-
