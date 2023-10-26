@@ -21,6 +21,9 @@ exports.verifyJWT = async (req, res, next) => {
       console.log(decoded);
       next();
    } catch (err) {
-      next(err);
+      res.status(500).send({
+         status: "failed",
+         message: "UnAuthorized User",
+      });
    }
 };

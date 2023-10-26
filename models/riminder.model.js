@@ -30,15 +30,19 @@ const reminderSchema = mongoose.Schema(
          },
          required: [true, "please provide a number"],
       },
-      receipt: {
-         phone: {
-            type: String,
-            validate: [
-               validator.isMobilePhone,
-               "Please provide a valid number",
-            ],
+
+      frequency: {
+         type: String,
+         enum: {
+            values: ["daily", "weekly", "monthly"],
          },
+         required: true,
       },
+      phone: {
+         type: String,
+         validate: [validator.isMobilePhone, "Please provide a valid number"],
+      },
+
       careTaker: {
          name: {
             type: String,
@@ -61,12 +65,12 @@ const reminderSchema = mongoose.Schema(
          type: Date,
          required: [true, "please provide a date & time"],
       },
-      remindTime: {
+      remindAt: {
          type: String,
          validate: {
             validator: (value) =>
                validator.isTime(value, {
-                  hourFormat: "hour12",
+                  hourFormat: "hour24",
                }),
          },
          required: [true, "please provide a reminder time"],
